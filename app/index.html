@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vanila chat</title>
+    <link rel="icon" type="image/x-icon" href="favicon.svg" />
+
+    <!-- <link rel="stylesheet" href="style.css" /> -->
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      main {
+        display: grid;
+        height: 100vh;
+        border: 1px solid;
+
+        grid-template-columns: max(20%, 150px) auto;
+        grid-template-rows: 50px auto 50px;
+        grid-template-areas:
+          "header header"
+          "aside feed"
+          "aside input";
+      }
+
+      header {
+        grid-area: header;
+        border: 1px solid;
+        display: flex;
+        align-items: center;
+      }
+
+      aside {
+        grid-area: aside;
+        border: 1px solid;
+      }
+      form {
+        grid-area: input;
+      }
+
+      .feed {
+        grid-area: feed;
+      }
+
+      form {
+        border: 1px solid;
+        display: flex;
+        align-items: center;
+      }
+
+      input {
+        width: calc(100% - 50px);
+      }
+    </style>
+
+    <title>Socket App</title>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h3>Socket app</h3>
+        <span>@chernicha</span>
+      </header>
+
+      <aside>
+        <ul class="channels">
+          <li>Channel 01</li>
+          <li>Channel 02</li>
+          <li>Channel 03</li>
+        </ul>
+      </aside>
+
+      <ul class="feed">
+        <h3>Channel 01</h3>
+
+        <li>Message 01</li>
+        <li>Message 02</li>
+      </ul>
+
+      <form>
+        <input type="text" id="message-input" />
+        <button>Send</button>
+      </form>
+    </main>
+
+    <!-- <script
+      src="https://cdn.socket.io/3.1.3/socket.io.min.js"
+      integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh"
+      crossorigin="anonymous"
+    ></script> -->
+    <script defer>
+      // const socket = io();
+      const form = document.querySelector("form"),
+        feed = document.querySelector(".feed"),
+        input = document.querySelector("input");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const msg = { id: Math.random() * 36, message: input.value };
+
+        sendMessage(msg).then(() => {
+          getMessages();
+        });
+      });
+
+      async function sendMessage(message) {
+        const body = JSON.stringify(message);
+
+        const res = await fetch("http://localhost:3333/messages", {
+          method: "POST",
+          body: body,
+          headers: [["Content-Type", "application/json"]],
+        });
+
+        console.log("sent ", body);
+      }
+
+      async function getMessages() {
+        const res = await fetch("http://localhost:3333/list/messages");
+        const data = await res.json();
+
+        const msgs = data.map((msg) => `<li>${msg.message}</li>`).join("");
+        feed.innerHTML = msgs;
+        console.log(msgs);
+      }
+    </script>
+    <!-- <script defer src="./main.js"></script> -->
+  </body>
+</html>

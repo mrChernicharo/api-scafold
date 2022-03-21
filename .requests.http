@@ -1,0 +1,50 @@
+POST http://localhost:3333/messages
+content-type: application/json
+
+{
+	"id": "1",
+	"message": "hey"
+}
+
+###
+
+POST http://localhost:3333/messages
+content-type: application/json
+
+{
+	"id": "2",
+	"message": "hola"
+}
+
+###
+
+POST http://localhost:3333/messages
+content-type: application/json
+
+{
+	"id": "3",
+	"message": "hallo"
+}
+
+###
+
+POST http://localhost:3333/messages
+content-type: application/json
+
+{
+	"id": "4",
+	"message": "salut"
+}
+
+###
+
+GET http://localhost:3333/messages/4
+
+###
+GET http://localhost:3333/list/messages?page=1&limit=10&order=asc
+
+####
+
+GET http://localhost:3333/list/messages
+
+###
